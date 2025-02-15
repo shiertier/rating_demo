@@ -9,16 +9,27 @@ import { signIn } from "next-auth/react";
 import Testimonial from "@/components/Testimonial";
 import ErrorModal from "@/components/ErrorModal";
 
+// 定义 Google 账户类型
+interface GoogleAccount {
+  oauth2: {
+    initTokenClient: (config: GoogleTokenConfig) => void;
+  };
+}
+
+interface GoogleTokenConfig {
+  client_id: string;
+  scope: string;
+  callback: (response: GoogleTokenResponse) => void;
+}
+
+interface GoogleTokenResponse {
+  access_token: string;
+}
+
 declare global {
   interface Window {
     google: {
-      accounts: {
-        oauth2: {
-          initTokenClient: (config: any) => {
-            requestAccessToken: () => void;
-          };
-        };
-      };
+      accounts: GoogleAccount;
     };
   }
 }
@@ -75,8 +86,10 @@ export default function LoginPage() {
         // 登录成功，跳转到首页
         router.push("/");
       }
-    } catch (error) {
-      setErrorMessage("登录失败，请稍后重试");
+    } catch (err) {
+      // 使用错误
+      const errorMsg = err instanceof Error ? err.message : "登录失败";
+      setErrorMessage(errorMsg);
       setIsErrorModalOpen(true);
     }
   };

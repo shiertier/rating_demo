@@ -8,11 +8,12 @@ import { useEffect, useState } from "react";
 import { getRandomTestimonial } from "@/config/testimonials";
 
 export default function Testimonial() {
-    const [testimonial, setTestimonial] = useState("");
+    // 移除未使用的状态
+    // const [testimonial, setTestimonial] = useState("");
 
-    useEffect(() => {
-        setTestimonial(getRandomTestimonial());
-    }, []);
+    // useEffect(() => {
+    //     setTestimonial(getRandomTestimonial());
+    // }, []);
 
     return (
         <div className="absolute bottom-10 left-10 hidden md:block">
