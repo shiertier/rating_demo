@@ -13,7 +13,7 @@ import type { Session, User } from "next-auth"
 // const MAX_LOGIN_ATTEMPTS = 5;  // 最大登录尝试次数
 // const LOCKOUT_DURATION = 15 * 60 * 1000; // 账户锁定时长：15分钟（毫秒）
 
-export const authOptions: AuthOptions = {
+const authOptions: AuthOptions = {
   // 使用 MongoDB 适配器存储会话和用户数据
   adapter: MongoDBAdapter(clientPromise),
 
@@ -151,5 +151,6 @@ export const authOptions: AuthOptions = {
 // 创建 NextAuth 处理器
 const handler = NextAuth(authOptions as AuthOptions)
 
-// 导出 GET 和 POST 处理器
+// 导出处理器和配置
 export { handler as GET, handler as POST }
+export { authOptions }
