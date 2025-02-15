@@ -7,7 +7,7 @@ import clientPromise from "@/lib/mongodb"
 import { compare } from "bcryptjs"
 import { MONGODB_CONFIG, AUTH_CONFIG } from "@/config/testimonials"
 import type { JWT } from "next-auth/jwt"
-import type { Session } from "next-auth"
+import type { Session, User } from "next-auth"
 
 // 定义登录限制相关常量
 // const MAX_LOGIN_ATTEMPTS = 5;  // 最大登录尝试次数
@@ -132,7 +132,7 @@ export const authOptions: AuthOptions = {
   // 配置回调函数
   callbacks: {
     // JWT 回调：用于自定义 JWT token
-    async jwt({ token, user }: { token: JWT; user: any }) {
+    async jwt({ token, user }: { token: JWT; user: User | undefined }) {
       if (user) {
         token.username = user.username
       }

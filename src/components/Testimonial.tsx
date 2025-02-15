@@ -4,8 +4,8 @@
 // 用于显示测试内容
 // 测试内容包括测试内容
 
-import { useEffect, useState } from "react";
-import { getRandomTestimonial } from "@/config/testimonials";
+// import { useEffect, useState } from "react";
+// import { getRandomTestimonial } from "@/config/testimonials";
 
 export default function Testimonial() {
     // 移除未使用的状态
