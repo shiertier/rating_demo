@@ -16,7 +16,7 @@ let clientPromise: Promise<MongoClient>
 
 if (process.env.NODE_ENV === 'development') {
     // 在开发环境中使用全局变量以防止连接热重载
-    let globalWithMongo = global as typeof globalThis & {
+    const globalWithMongo = global as typeof globalThis & {
         _mongoClientPromise?: Promise<MongoClient>
     }
 

@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import clientPromise from "@/lib/mongodb";
-import { Filter } from 'mongodb';
+// import { Filter } from 'mongodb';  // 暂时注释掉未使用的导入
 import { MONGODB_CONFIG } from "@/config/testimonials";
 
 interface ImageInfo {

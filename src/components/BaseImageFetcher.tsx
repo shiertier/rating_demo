@@ -40,14 +40,15 @@ export default function BaseImageFetcher({
   useEffect(() => {
     let isMounted = true;
     const abortController = new AbortController();
+    const currentImageUrl = imageUrl; // 捕获当前值
 
     const fetchImage = async () => {
       setLoading(true);
       setError(null);
 
       try {
-        if (imageUrl) {
-          URL.revokeObjectURL(imageUrl);
+        if (currentImageUrl) {
+          URL.revokeObjectURL(currentImageUrl);
           setImageUrl(null);
         }
 
@@ -74,11 +75,11 @@ export default function BaseImageFetcher({
     return () => {
       isMounted = false;
       abortController.abort();
-      if (imageUrl) {
-        URL.revokeObjectURL(imageUrl);
+      if (currentImageUrl) {
+        URL.revokeObjectURL(currentImageUrl);
       }
     };
-  }, [imageId, onLoad, onError]);
+  }, [imageId, onLoad, onError, imageUrl]);
 
   return (
     <div className={`relative ${className} ${roundedClassName} overflow-hidden bg-gray-100 dark:bg-gray-800`}>

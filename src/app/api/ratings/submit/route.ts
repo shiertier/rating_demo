@@ -43,7 +43,7 @@ export async function POST(request: Request) {
         }
 
         // 过滤出有效的评分（1-5分）
-        const validRatings = Object.entries(ratings).filter(([_, score]) =>
+        const validRatings = Object.entries(ratings).filter(([, score]) =>
             isValidScore(score)
         );
 

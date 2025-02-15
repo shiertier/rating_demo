@@ -8,8 +8,8 @@ import { compare } from "bcryptjs"
 import { MONGODB_CONFIG, AUTH_CONFIG } from "@/config/testimonials"
 
 // 定义登录限制相关常量
-const MAX_LOGIN_ATTEMPTS = 5;  // 最大登录尝试次数
-const LOCKOUT_DURATION = 15 * 60 * 1000; // 账户锁定时长：15分钟（毫秒）
+// const MAX_LOGIN_ATTEMPTS = 5;  // 最大登录尝试次数
+// const LOCKOUT_DURATION = 15 * 60 * 1000; // 账户锁定时长：15分钟（毫秒）
 
 export const authOptions: AuthOptions = {
   // 使用 MongoDB 适配器存储会话和用户数据

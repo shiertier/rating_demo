@@ -16,10 +16,8 @@ export default function Testimonial() {
 
     return (
         <div className="absolute bottom-10 left-10 hidden md:block">
-            <p className="max-w-xl text-white/60">
-                <span className="font-medium">"</span>
-                {testimonial}
-                <span className="font-medium">"</span>
+            <p className="text-white text-4xl font-medium max-w-[600px] text-center">
+                &ldquo;让我们一起定义美的标准&rdquo;
             </p>
         </div>
     );

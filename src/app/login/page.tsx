@@ -81,47 +81,6 @@ export default function LoginPage() {
     }
   };
 
-  const handleGoogleLogin = () => {
-    const client = window.google.accounts.oauth2.initTokenClient({
-      client_id: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID,
-      scope: 'email profile openid',
-      callback: async (response: any) => {
-        if (response.access_token) {
-          try {
-            // 1. 发送 access token 到后端进行验证和用户处理
-            const loginResponse = await fetch('/api/auth/google/login', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({
-                access_token: response.access_token
-              }),
-            });
-
-            if (!loginResponse.ok) {
-              throw new Error('Login failed');
-            }
-
-            const { token, user } = await loginResponse.json();
-
-            // 2. 存储后端返回的 JWT token（不存储 Google token）
-            localStorage.setItem('jwt_token', token);
-            // 3. 存储用户信息
-            localStorage.setItem('user', JSON.stringify(user));
-            // 4. 跳转到首页
-            router.push('/');
-          } catch (error) {
-            console.error('Login error:', error);
-            // TODO: 显示错误提示
-          }
-        }
-      },
-    });
-
-    client.requestAccessToken();
-  };
-
   // 检查URL中是否有访问令牌
   React.useEffect(() => {
     if (!mounted) return;
