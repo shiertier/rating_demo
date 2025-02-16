@@ -224,36 +224,58 @@ export default function ImageRaterBase({ onComplete }: ImageRaterBaseProps) {
     dispatch({ type: 'SET_SUBMITTING', payload: true });
     try {
       // 准备评分数据
-      const ratingData = Object.entries(state.ratings).reduce((acc, [id, score]) => ({
-        ...acc,
-        [id]: score
-      }), {});
+      const ratingData = Object.entries(state.ratings)
+        .filter(([, score]) => score > 0) // 只提交有效评分（大于0的评分）
+        .reduce((acc, [id, score]) => ({
+          ...acc,
+          [id]: score
+        }), {});
 
-      // 发送评分数据
+      // 添加日志
+      console.log('准备提交的评分数据:', ratingData);
+
+      // 检查是否有有效评分数据
+      if (Object.keys(ratingData).length === 0) {
+        throw new Error('没有有效的评分数据可提交');
+      }
+
+      // 发送评分数据到服务器
       const response = await fetch('/api/ratings/submit', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(ratingData)
+        body: JSON.stringify(ratingData),
       });
 
+      // 添加日志
+      console.log('服务器响应:', response);
+
       if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || '提交失败');
+        const errorData = await response.json();
+        throw new Error(errorData.error || '提交失败');
       }
 
-      // 重置评分并加载新图片
+      const result = await response.json();
+      console.log('提交成功:', result);
+
+      // 提交成功后重置状态
       dispatch({ type: 'RESET_RATINGS' });
-      isLoadingRef.current = false;  // 重置标志以允许重新加载
+
+      // 重新加载新的图片
+      isLoadingRef.current = false; // 重置加载标志
       await loadImages();
+
+      // 可选：调用完成回调
+      onComplete?.();
+
     } catch (error) {
       console.error('提交评分失败:', error);
-      dispatch({ type: 'SET_ERROR', payload: error instanceof Error ? error.message : '提交评分失败，请重试' });
+      dispatch({ type: 'SET_ERROR', payload: error instanceof Error ? error.message : '提交失败' });
     } finally {
       dispatch({ type: 'SET_SUBMITTING', payload: false });
     }
-  }, [loadImages, state.isSubmitting, state.ratings]);
+  }, [loadImages, onComplete, state.ratings, state.isSubmitting]);
 
   // 先声明 handleImageChange
   const handleImageChange = useCallback((newIndex: number) => {
@@ -271,18 +293,19 @@ export default function ImageRaterBase({ onComplete }: ImageRaterBaseProps) {
   // 然后声明 handleRate
   const handleRate = useCallback((star: number) => {
     const currentId = stateRef.current.imageIds[stateRef.current.currentIndex];
-    const currentRating = stateRef.current.ratings[currentId];
 
-    // 如果已经有评分且点击相同分数，则重置为0
-    if (currentRating === star) {
-      dispatch({ type: 'SET_RATING', payload: 0 });
-      dispatch({ type: 'ADD_RATING', payload: { id: currentId, rating: 0 } });
-      return;
-    }
+    // 添加日志
+    console.log('当前图片ID:', currentId, '评分:', star);
 
-    // 正常评分流程
+    // 更新评分
     dispatch({ type: 'SET_RATING', payload: star });
     dispatch({ type: 'ADD_RATING', payload: { id: currentId, rating: star } });
+
+    // 添加日志
+    console.log('ratings状态更新:', {
+      ...stateRef.current.ratings,
+      [currentId]: star
+    });
 
     // 延迟自动切换到下一张
     setTimeout(() => {

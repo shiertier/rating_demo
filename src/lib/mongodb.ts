@@ -31,4 +31,12 @@ if (process.env.NODE_ENV === 'development') {
     clientPromise = client.connect()
 }
 
+// 添加连接错误处理
+clientPromise.then(() => {
+    console.log("MongoDB连接成功");
+}).catch(err => {
+    console.error('MongoDB连接失败:', err);
+    process.exit(1);
+});
+
 export default clientPromise

@@ -12,6 +12,15 @@ const nextConfig: NextConfig = {
     }
     return config;
   },
+  env: {
+    MONGODB_URI: process.env.MONGODB_URI,
+    NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET,
+  },
+  logging: {
+    fetches: {
+      fullUrl: true,
+    },
+  },
 };
 
 export default nextConfig;
